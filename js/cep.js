@@ -1,11 +1,15 @@
+const selectEstado = document.getElementById("estado")
+const urlEstados = "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+fetch(urlEstados).then(res => res.json())
+    .then(listaDeEstados => populaSelectDeEstadosBrasileiros(listaDeEstados))
 document.getElementById("botao-buscacep").addEventListener("click", () => buscaCEP())
 function buscaCEP() {
     const urlParaPesquisar = pegaUrlParaPesquisar()
     fetch(urlParaPesquisar).then(res => res.json())
-        .then(objetoRUA => populaPagina(objetoRUA))
+        .then(listaDeResultados => populaCepComA(listaDeResultados))
 }
 
-function populaPagina(listaDeResultados) {
+function populaCepComA(listaDeResultados) {
     console.log(listaDeResultados[0])
     const primeiroResultado = listaDeResultados[0]
     document.getElementById("cep").value = primeiroResultado.cep
@@ -22,3 +26,16 @@ function pegaUrlParaPesquisar() {
     return `https://viacep.com.br/ws/${estado}/${cidade}/${rua}/json/`
 }
 
+function populaSelectDeEstadosBrasileiros(listaDeEstados) {
+    for (const estado of listaDeEstados) {
+        populaSelectComO(estado) 
+    }
+}
+
+function populaSelectComO(estado) {
+    const option = document.createElement("option");
+   option.value= estado.sigla;
+   option.label= estado.nome;
+   // then append it to the select element
+   selectEstado.appendChild(option);
+}
